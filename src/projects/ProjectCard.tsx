@@ -2,12 +2,14 @@ import Project from "./Project";
 
 interface ProjectCardProp {
     info: Project;
+    onClick: (data: Project) => void;                                                                            
 }
 
-const ProjectCard = ( { info }: ProjectCardProp ) => {
+const ProjectCard = ( props: ProjectCardProp ) => {
+    const {info, onClick} = props;
 
     const handleEditClick = (data: Project) => {
-        console.log(data);
+        onClick(data);
     }
 
     return (
