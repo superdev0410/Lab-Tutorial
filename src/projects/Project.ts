@@ -9,7 +9,7 @@ class Project {
     isActive: boolean = false;
 
     get isNew(): boolean {
-        return this.id == undefined;
+        return this.id === undefined;
     }
 
     constructor(initializer?: any) {
