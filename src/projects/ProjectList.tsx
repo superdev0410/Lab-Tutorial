@@ -14,6 +14,10 @@ const ProjectList = ( { projects }: ProjectListProps ) => {
         setProjectBeingEdited(info);
     }
 
+    const handleCancelClick = () => {
+        setProjectBeingEdited({});
+    }
+
     return (
         <>
         <ul className="row">
@@ -21,7 +25,7 @@ const ProjectList = ( { projects }: ProjectListProps ) => {
                 <div key={data.id} className="cols-sm">
                     {
                         projectBeingEdited === data? 
-                        <ProjectForm/>
+                        <ProjectForm onCancel={handleCancelClick}/>
                         :<ProjectCard info={data} onClick={handleEditClick}/> 
                     }
                 </div>                
