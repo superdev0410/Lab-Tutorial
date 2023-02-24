@@ -1,8 +1,20 @@
+import { SyntheticEvent } from "react";
+import Project from "./Project"
+
 interface ProjectFormProps {
     onCancel: () => void;
+    onSave: (info: Project) => void;
 }
 
-const ProjectForm = ({ onCancel }: ProjectFormProps) => {
+const ProjectForm = (props: ProjectFormProps) => {
+    // get props
+    const {onCancel, onSave} = props;
+
+    const handleSubmitEvent = (event: SyntheticEvent) => {
+        event.preventDefault();
+        onSave(new Project({name: "Update Project"}));
+    }
+
     return (
         <form className="input-group vertical">
             {/* UI Elements for name field. */}
@@ -23,7 +35,7 @@ const ProjectForm = ({ onCancel }: ProjectFormProps) => {
 
             {/* Show save and cancel button. */}
             <div className="input-group">
-                <button className="primary bordered medium">Save</button>
+                <button className="primary bordered medium" onClick={handleSubmitEvent}>Save</button>
                 <span></span>
                 <button className="bordered medium" onClick={onCancel}>Cancel</button>
             </div>
