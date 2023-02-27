@@ -1,6 +1,7 @@
 import { SyntheticEvent, useState } from "react";
 import Project from "./Project";
 
+// define interfaces
 interface ProjectFormProps {
 	initialproject: Project;
 	onCancel: () => void;
@@ -8,7 +9,7 @@ interface ProjectFormProps {
 }
 
 interface ChangedValue {
-	[name: string]: string | number | boolean;
+	[key: string]: string | number | boolean;
 }
 
 const ProjectForm = ({
@@ -18,6 +19,45 @@ const ProjectForm = ({
 }: ProjectFormProps) => {
 	// define states
 	const [project, setProject] = useState(initialproject);
+	const [error, setError] = useState({
+		name: "",
+		description: "",
+		budget: "",
+	});
+
+	const validate = (testproject: Project) => {
+		let errorstring = {
+			name: "",
+			description: "",
+			budget: ""
+		}
+
+		// check project name
+		if (testproject.name.length === 0)
+		{
+			errorstring.name = "Name can't be empty string.";
+		}
+		else if (testproject.name.length < 3) {
+			errorstring.name = "Name needs to be at least 3 characters long.";
+		}
+
+		// check project description
+		if (testproject.description.length === 0) {
+			errorstring.description = "Description can't be empty string.";
+		}
+
+		// check project budget
+		if (testproject.budget === 0) {
+			errorstring.budget = "Budget can't be zero.";
+		}
+
+		// update errors
+		setError(errorstring);
+	}
+
+	const isValid = ():boolean => {
+		return (error.name + error.description + error.budget) === "";
+	}
 
 	// define event handlers
 	const onChangeEventHandler = (event: any) => {
@@ -35,13 +75,15 @@ const ProjectForm = ({
 		// Update project state
 		setProject((p) => {
 			let updateProject = new Project({ ...p, ...change });
+			validate(updateProject);
 			return updateProject;
 		});
 	};
 
 	const handleSubmitEvent = (event: SyntheticEvent) => {
 		event.preventDefault();
-		onSave(project);
+		if (isValid())
+			onSave(project);
 	};
 
 	return (
@@ -55,6 +97,12 @@ const ProjectForm = ({
 				value={project.name}
 				onChange={onChangeEventHandler}
 			/>
+			{
+				error.name !== "" &&
+				<div className="card error">
+					<p>{error.name}</p>
+				</div>
+			}
 
 			{/* UI Elements for description field */}
 			<label htmlFor="description">Description</label>
@@ -64,6 +112,12 @@ const ProjectForm = ({
 				value={project.description}
 				onChange={onChangeEventHandler}
 			></textarea>
+			{
+				error.description !== "" &&
+				<div className="card error">
+					<p>{error.description}</p>
+				</div>
+			}
 
 			{/* UI Elements for budget field */}
 			<label htmlFor="budget">Budget</label>
@@ -74,6 +128,12 @@ const ProjectForm = ({
 				value={project.budget}
 				onChange={onChangeEventHandler}
 			></input>
+			{
+				error.budget !== "" &&
+				<div className="card error">
+					<p>{error.budget}</p>
+				</div>
+			}
 
 			{/* Show the project is active or not and show the checkbox to select tickets */}
 			<label htmlFor="isActive">Active?</label>
@@ -89,7 +149,7 @@ const ProjectForm = ({
 				<button
 					className="primary bordered medium"
 					onClick={handleSubmitEvent}
-				>   
+				>
 					Save
 				</button>
 				<span></span>
